@@ -4,48 +4,69 @@ import os
 import requests
 import numpy as np
 import pandas as pd
-from keras.models import Sequential
-from keras.layers import LSTM, Activation, Flatten, Dropout, Dense, Embedding, TimeDistributed, CuDNNLSTM
-from keras.callbacks import ModelCheckpoint
-from keras.utils import np_utils
+from textgenrnn import textgenrnn
 
+def train_model():
+    model_cfg = {
+        'rnn_size': 500,
+        'rnn_layers': 12,
+        'rnn_bidirectional': True,
+        'max_length': 15,
+        'max_words': 10000,
+        'dim_embeddings': 100,
+        'word_level': False,
+    }
 
-dataset = pd.read_csv('taylor_swift_lyrics.csv', encoding = "latin1")
+    train_cfg = {
+        'line_delimited': True,
+        'num_epochs': 100,
+        'gen_epochs': 25,
+        'batch_size': 750,
+        'train_size': 0.8,
+        'dropout': 0.0,
+        'max_gen_length': 300,
+        'validation': True,
+        'is_csv': False
+    }
 
-def processFirstLine(lyrics, songID, songName, row):
-    lyrics.append(row['lyric'] + '\n')
-    songID.append( row['year']*100+ row['track_n'])
-    songName.append(row['track_title'])
-    return lyrics,songID,songName
+    uploaded = files.upload()
+    all_files = [(name, os.path.getmtime(name)) for name in os.listdir()]
+    latest_file = sorted(all_files, key=lambda x: -x[1])[0][0]
 
-# define empty lists for the lyrics , songID , songName
-lyrics = []
-songID = []
-songName = []
+    model_name = '500nds_12Lrs_100epchs_Model'
+    textgen = textgenrnn(name=model_name)
 
-# songNumber indicates the song number in the dataset
-songNumber = 1
+    train_function = textgen.train_from_file if train_cfg['line_delimited'] else textgen.train_from_largetext_file
 
-# i indicates the song number
-i = 0
-isFirstLine = True
+    train_function(
+        file_path=latest_file,
+        new_model=True,
+        num_epochs=train_cfg['num_epochs'],
+        gen_epochs=train_cfg['gen_epochs'],
+        batch_size=train_cfg['batch_size'],
+        train_size=train_cfg['train_size'],
+        dropout=train_cfg['dropout'],
+        max_gen_length=train_cfg['max_gen_length'],
+        validation=train_cfg['validation'],
+        is_csv=train_cfg['is_csv'],
+        rnn_layers=model_cfg['rnn_layers'],
+        rnn_size=model_cfg['rnn_size'],
+        rnn_bidirectional=model_cfg['rnn_bidirectional'],
+        max_length=model_cfg['max_length'],
+        dim_embeddings=model_cfg['dim_embeddings'],
+        word_level=model_cfg['word_level'])
 
-# Iterate through every lyrics line and join them together for each song independently
-for index,row in dataset.iterrows():
-    if(songNumber == row['track_n']):
-        if (isFirstLine):
-            lyrics,songID,songName = processFirstLine(lyrics,songID,songName,row)
-            isFirstLine = False
-        else :
-            #if we still in the same song , keep joining the lyrics lines
-            lyrics[i] +=  row['lyric'] + '\n'
-    #When it's done joining a song's lyrics lines , go to the next song :
-    else :
-        lyrics,songID,songName = processFirstLine(lyrics,songID,songName,row)
-        songNumber = row['track_n']
-        i+=1
+        print(textgen.model.summary())
 
+    files.download('{}_weights.hdf5'.format(model_name))
+    files.download('{}_vocab.json'.format(model_name))
+    files.download('{}_config.json'.format(model_name))
 
+    textgen = textgenrnn(weights_path='6layers30EpochsModel_weights.hdf5',
+                           vocab_path='6layers30EpochsModel_vocab.json',
+                           config_path='6layers30EpochsModel_config.json')
 
-# Define a new pandas DataFrame to save songID , songName , Lyrics in it to use them later
-lyrics_data = pd.DataFrame({'songID':songID, 'songName':songName, 'lyrics':lyrics })
+    generated_characters = 300
+
+    textgen.generate_samples(300)
+    textgen.generate_to_file('lyrics.txt', 300)
