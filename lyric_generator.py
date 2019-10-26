@@ -1,13 +1,43 @@
+import config
 import sys
 import json
 import os
 import requests
 import numpy as np
 import pandas as pd
-from textgenrnn import textgenrnn
+#from textgenrnn import textgenrnn
+from musixmatch import Musixmatch
+
+def get_lyrics_api():
+    musixmatch_key = config.MUSIXMATCH_KEY
+    musixmatch = Musixmatch(musixmatch_key)
+    lyrics = musixmatch.matcher_lyrics_get('Sexy and I know it', 'LMFAO')
+    print(lyrics)
+    images = []
+    '''try:
+        image = None
+        session = requests.Session()
+        # these are sent along for all requests
+        session.headers['X-IG-API-KEY'] = API_KEY
+        url = 'https://images-api.nasa.gov/search?q=%s' % query
+        response = requests.get(url).json()
+        collection = response.get('collection')
+        items = collection.get('items')
+        top_ten = items[:10]
+
+        for item in top_ten:
+            links = item.get('links')
+            data = item.get('data')
+            image = links[0].get('href')
+            images.append(image)
+
+        return images
+    except:
+        print("Error Occurred")
+        return images'''
 
 def train_model():
-    model_cfg = {
+    '''model_cfg = {
         'rnn_size': 500,
         'rnn_layers': 12,
         'rnn_bidirectional': True,
@@ -69,4 +99,4 @@ def train_model():
     generated_characters = 300
 
     textgen.generate_samples(300)
-    textgen.generate_to_file('lyrics.txt', 300)
+    textgen.generate_to_file('lyrics.txt', 300)'''
