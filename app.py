@@ -5,7 +5,9 @@ import requests
 import lyric_generator
 
 def main():
-    lyric_generator.get_lyrics_api()
+    print('Please enter an artist\'s name: ')
+    artist_name = input()
+    lyric_generator.get_lyrics_api(artist_name)
 
 
 main()
