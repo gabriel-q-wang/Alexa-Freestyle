@@ -5,7 +5,7 @@ import os
 import requests
 import numpy as np
 import pandas as pd
-#from textgenrnn import textgenrnn
+from textgenrnn import textgenrnn
 from musixmatch import Musixmatch
 
 def get_lyrics_api(artist_name):
@@ -38,31 +38,13 @@ def get_lyrics_api(artist_name):
                 lyrics_list.append(lyrics)
 
         print(lyrics_list)
+        return lyrics_list
     except:
         print("Error")
-    '''try:
-        image = None
-        session = requests.Session()
-        # these are sent along for all requests
-        session.headers['X-IG-API-KEY'] = API_KEY
-        url = 'https://images-api.nasa.gov/search?q=%s' % query
-        response = requests.get(url).json()
-        collection = response.get('collection')
-        items = collection.get('items')
-        top_ten = items[:10]
 
-        for item in top_ten:
-            links = item.get('links')
-            data = item.get('data')
-            image = links[0].get('href')
-            images.append(image)
-
-        return images
-    except:
-        print("Error Occurred")
-        return images'''
-
-def train_model():
+def train_model(lyric_list):
+    textgen = textgenrnn()
+    print(textgen.train_on_texts(lyric_list, num_epochs=10,  gen_epochs=2))
     '''model_cfg = {
         'rnn_size': 500,
         'rnn_layers': 12,
