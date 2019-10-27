@@ -1,6 +1,7 @@
 from flask_cors import CORS
 from flask import Flask
 from flask import request
+from app import main
 
 app = Flask(__name__)
 CORS(app) #Prevents CORS errors 
@@ -8,7 +9,7 @@ CORS(app) #Prevents CORS errors
 @app.route('/')
 def index():
     band_name = request.args.get('band')
-    return str(band_name) 
+    return main(str(band_name)) 
 
 if __name__ == '__main__':
     from gevent.pywsgi import WSGIServer
