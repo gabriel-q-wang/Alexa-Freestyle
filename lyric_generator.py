@@ -34,11 +34,11 @@ def get_lyrics_api(artist_name):
                 lyrics = lyrics.split(sep, 1)[0]
                 lyrics = lyrics.replace('\\', ' ')
                 lyrics = lyrics.replace('\"', ' ')
-                lyrics = lyrics.replace('\\n', ' ')
-                lyrics = lyrics.replace('\n', ' ')
-                lyrics = lyrics.replace('...', ' ')
-                lyrics = lyrics.replace('?', ' ')
-                lyrics = lyrics.replace('!', ' ')
+                lyrics = lyrics.replace('\\n', ',')
+                lyrics = lyrics.replace('\n', ',')
+                #lyrics = lyrics.replace('...', ',')
+                #lyrics = lyrics.replace('?', ' ')
+                #lyrics = lyrics.replace('!', ' ')
                 final_verse_list.append(lyrics)
 
         return final_verse_list
@@ -47,5 +47,5 @@ def get_lyrics_api(artist_name):
 
 def train_model(lyric_list, artist_name):
     textgen = textgenrnn()
-    textgen.train_on_texts(lyric_list, num_epochs=2,  gen_epochs=1)
+    textgen.train_on_texts(lyric_list, num_epochs=50,  gen_epochs=1)
     textgen.save(artist_name + '.hdf5')

@@ -5,7 +5,8 @@ import requests
 import lyric_generator
 from textgenrnn import textgenrnn
 
-def main(artist_name):
+def main():
+    artist_name = input('Please enter an artist name: ')
     lyric_list = lyric_generator.get_lyrics_api(artist_name)
 
     if lyric_list is None:
