@@ -19,5 +19,6 @@ def main(artist_name):
         return response
     else:
         lyric_generator.train_model(lyric_list, artist_name)
+        textgen = textgenrnn(path_name)
         response = textgen.generate(return_as_list=True)[0]
         return response
