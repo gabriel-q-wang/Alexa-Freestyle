@@ -1,10 +1,10 @@
+from __future__ import print_function
 import sys
 import json
 import os
 import requests
 from textgenrnn import textgenrnn
 from musixmatch import Musixmatch
-from __future__ import print_function
 import numpy
 
 # --------------- Helpers that build all of the responses ----------------------
@@ -163,16 +163,12 @@ def get_lyrics_api(artist_name):
 
 def train_model(lyric_list, artist_name):
     textgen = textgenrnn()
-    print(textgen.train_on_texts(lyric_list, num_epochs=20,  gen_epochs=1))
+    print(textgen.train_on_texts(lyric_list, num_epochs=2,  gen_epochs=1))
+    return textgen
     #textgen.save(artist_name + '.hdf5')
 
-def main(artist_name):
+def main_func(artist_name):
     lyric_list = get_lyrics_api(artist_name)
     artist_name = artist_name.replace(' ', '-')
-    train_model(lyric_list, artist_name)
-    return textgen.generate(1)
-    '''if os.path.exists(artist_name + '.hdf5'):
-        textgen = textgenrnn('textgenrnn_weights.hdf5')
-        textgen.generate_samples()
-    else:
-        train_model(lyric_list, artist_name)'''
+    textgen = train_model(lyric_list, artist_name)
+    return textgen.generate(3)
