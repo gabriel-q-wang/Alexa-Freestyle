@@ -34,29 +34,18 @@ def get_lyrics_api(artist_name):
                 lyrics = lyrics.split(sep, 1)[0]
                 lyrics = lyrics.replace('\\', ' ')
                 lyrics = lyrics.replace('\"', ' ')
-                lyrics = lyrics.replace('\\n', ' ')
-                lyrics = lyrics.replace('\n', ' ')
-                #lyrics = lyrics.replace('.', '!')
-                #lyrics = lyrics.replace(',', '!')
-                lyrics = lyrics.replace('...', ' ')
-                lyrics = lyrics.replace('?', ' ')
-                lyrics = lyrics.replace('!', ' ')
-                #lyrics = lyrics.split('!')
-                #lyrics = lyrics_list.extend(list(filter(None, lyrics)))
+                lyrics = lyrics.replace('\\n', ',')
+                lyrics = lyrics.replace('\n', ',')
+                #lyrics = lyrics.replace('...', ',')
+                #lyrics = lyrics.replace('?', ' ')
+                #lyrics = lyrics.replace('!', ' ')
                 final_verse_list.append(lyrics)
 
-        '''for i in range(0, len(lyrics_list), 6):
-            chunk = lyrics_list[i:i+6]
-            verse = ""
-            for element in chunk:
-                verse += element + " "
-            final_verse_list.append(verse)
-            final_verse_list = list(filter(None, final_verse_list))
-            print(final_verse_list)'''
         return final_verse_list
     except:
-        print("Error")
+        return None
 
-def train_model(lyric_list):
+def train_model(lyric_list, artist_name):
     textgen = textgenrnn()
-    print(textgen.train_on_texts(lyric_list, num_epochs=2,  gen_epochs=1))
+    textgen.train_on_texts(lyric_list, num_epochs=50,  gen_epochs=1)
+    textgen.save(artist_name + '.hdf5')
