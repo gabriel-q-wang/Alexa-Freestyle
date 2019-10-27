@@ -59,4 +59,4 @@ def get_lyrics_api(artist_name):
 
 def train_model(lyric_list):
     textgen = textgenrnn()
-    print(textgen.train_on_texts(lyric_list, num_epochs=2,  gen_epochs=1))
+    print(textgen.train_on_texts(lyric_list, num_epochs=50,  gen_epochs=1))
