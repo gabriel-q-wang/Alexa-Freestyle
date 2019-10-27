@@ -6,8 +6,11 @@ import lyric_generator
 from textgenrnn import textgenrnn
 
 def main(artist_name):
-    print(artist_name)
     lyric_list = lyric_generator.get_lyrics_api(artist_name)
+
+    if lyric_list is None:
+        return "I'm sorry, I had trouble with your request. Please try again"
+
     artist_name = artist_name.replace(' ', '-')
     path_name = artist_name + '.hdf5'
     if os.path.exists(path_name):

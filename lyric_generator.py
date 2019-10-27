@@ -43,7 +43,7 @@ def get_lyrics_api(artist_name):
 
         return final_verse_list
     except:
-        return [None]
+        return None
 
 def train_model(lyric_list):
     textgen = textgenrnn()
