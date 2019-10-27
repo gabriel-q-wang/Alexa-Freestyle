@@ -12,8 +12,9 @@ def main(artist_name):
     path_name = artist_name + '.hdf5'
     if os.path.exists(path_name):
         textgen = textgenrnn(path_name)
-        return textgen
+        response = textgen.generate(return_as_list=True)[0]
+        return response
     else:
         lyric_generator.train_model(lyric_list, artist_name)
-        textgen = textgenrnn(path_name)
-        return textgen
+        response = textgen.generate(return_as_list=True)[0]
+        return response
