@@ -45,7 +45,7 @@ def get_lyrics_api(artist_name):
     except:
         return None
 
-def train_model(lyric_list):
+def train_model(lyric_list, artist_name):
     textgen = textgenrnn()
     textgen.train_on_texts(lyric_list, num_epochs=50,  gen_epochs=1)
     textgen.save(artist_name + '.hdf5')
